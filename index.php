@@ -1,9 +1,72 @@
 <?php 
 
-$nomeProduto = $_POST["nomeProduto"];
+function cadastrarProduto($nomeProduto, $categoriaProduto, $precoProduto){
 
-echo $nomeProduto;
-//var_dump($nomeProduto); 
+    $nomeArquivo = "produto.json";
+
+    if(file_exists($nomeArquivo)){
+        
+        //abrindo e pegando informações do arquivo JSON
+
+        $arquivo = file_get_contents($nomeArquivo);
+        
+        //transformando JSON em ARRAY para poder inserir produtos
+        $produtos = json_decode($arquivo, true);
+        
+        //adicionando um novo produto dentro do ARRAY que estava dentro do arquivo
+        $produtos[] = ["nome"=>$nomeProduto, "categoria"=>$categoriaProduto, "preco"=>$precoProduto];
+
+        //salvando JSON dentro de um arquivo
+        $json = json_encode($produtos);
+
+        //validando se ocorreu algum erro na hora de colocar o conteúdo dentro do arquivo JSON
+        $deuCerto = file_put_contents($nomeArquivo, $json);
+
+        //validando se ocorreu algum erro na hora de colocar o conteúdo dentro do arquivo JSON
+        if($deuCerto){
+            return "Dados salvos com sucesso!";
+        }else{
+            return "Ops, encontramos um problema! Entre em contato com o administrador do sistema!";
+        }
+
+    }else{    
+        $produtos = [];
+        
+        //adicionando um novo produto, mesma idéia do array_push, porém utilizando menos processamento da máquina
+        $produtos[] = ["nome"=>$nomeProduto, "categoria"=>$categoriaProduto, "preco"=>$precoProduto];
+        
+        //transformando a array $produtos em JSON
+        $json = json_encode($produtos);
+
+        //salvando o JSON dentro de um arquivo
+        $deuCerto = file_put_contents($nomeArquivo, $json);
+        
+       //validando se ocorreu algum erro na hora de colocar o conteúdo dentro do arquivo JSON
+        if($deuCerto){
+            return "Dados salvos com sucesso!";
+        }else{
+            return "Ops, encontramos um problema! Entre em contato com o administrador do sistema!";
+        }
+
+    }
+
+}
+
+if($_POST){
+
+    //importando arquivos(imagens, excel, pdf, etc)
+    $nomeImagem = $_FILES["fotoProduto"]["name"];
+    $localTemp = $_FILES["fotoProduto"]["tmp_name"];
+    $caminhoSalvo = "img/".$nomeImagem;
+
+    $deuCerto = move_uploaded_file($localTemp, $caminhoSalvo);
+
+    echo cadastrarProduto($_POST["nomeProduto"], $_POST["categoriaProduto"], $_POST["precoProduto"]);
+
+}else{
+
+
+}
 
 
 ?>
@@ -25,14 +88,13 @@ echo $nomeProduto;
     <title>Document</title>
 </head>
 <body>
-    <?php include_once("config/validacoes.php") ?>
-    <?php include_once("config/variaveis.php") ?>
+    <?php include_once("variaveis.php") ?>
     <main class="container">
 
         <div class="row">
             <div class="col-6"> 
                 <h1>Cadastro de Produtos</h1>   
-                <form action="index.php" method="post">
+                <form action="index.php" method="post" enctype ="multipart/form-data">
                     <div class="form-group">
                         <div>
                             <input class="form-control" type="text" name="nomeProduto" id="" placeholder="Nome do produto">
@@ -70,9 +132,7 @@ echo $nomeProduto;
                 
                 <?php foreach($produtos as $produto) { ?>
                 <tr>
-                    <td><?php array_push($produtos, $produto["nome"]); 
-                                echo $produto["nome"];
-                    ?></td>
+                    <td><?php echo $produto["nome"]; ?></td>
                     <td><?php echo $produto["categoria"]; ?></td>
                     <td><?php echo $produto["preco"]; ?></td>
                 </tr>  
