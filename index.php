@@ -1,6 +1,6 @@
 <?php 
 
-function cadastrarProduto($nomeProduto, $categoriaProduto, $precoProduto){
+function cadastrarProduto($nomeProduto, $categoriaProduto, $precoProduto, $fotoProduto, $descProduto, $quantidadeProduto){
 
     $nomeArquivo = "produto.json";
 
@@ -14,7 +14,7 @@ function cadastrarProduto($nomeProduto, $categoriaProduto, $precoProduto){
         $produtos = json_decode($arquivo, true);
         
         //adicionando um novo produto dentro do ARRAY que estava dentro do arquivo
-        $produtos[] = ["nome"=>$nomeProduto, "categoria"=>$categoriaProduto, "preco"=>$precoProduto];
+        $produtos[] = ["nome"=>$nomeProduto, "categoria"=>$categoriaProduto, "preco"=>$precoProduto, "foto"=>$fotoProduto, "descricao"=>$descProduto, "quantidade"=>$quantidadeProduto];
 
         //salvando JSON dentro de um arquivo
         $json = json_encode($produtos);
@@ -33,7 +33,7 @@ function cadastrarProduto($nomeProduto, $categoriaProduto, $precoProduto){
         $produtos = [];
         
         //adicionando um novo produto, mesma idéia do array_push, porém utilizando menos processamento da máquina
-        $produtos[] = ["nome"=>$nomeProduto, "categoria"=>$categoriaProduto, "preco"=>$precoProduto];
+        $produtos[] = ["nome"=>$nomeProduto, "categoria"=>$categoriaProduto, "preco"=>$precoProduto, "foto"=>$fotoProduto, "descricao"=>$descProduto, "quantidade"=>$quantidadeProduto];
         
         //transformando a array $produtos em JSON
         $json = json_encode($produtos);
@@ -61,7 +61,7 @@ if($_POST){
 
     $deuCerto = move_uploaded_file($localTemp, $caminhoSalvo);
 
-    echo cadastrarProduto($_POST["nomeProduto"], $_POST["categoriaProduto"], $_POST["precoProduto"]);
+    echo cadastrarProduto($_POST["nomeProduto"], $_POST["categoriaProduto"], $_POST["precoProduto"], $caminhoSalvo, $_POST["descProduto"], $_POST["quantidadeProduto"]);
 
 }else{
 
