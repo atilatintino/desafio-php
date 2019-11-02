@@ -1,0 +1,26 @@
+#section-verProduto{
+    width: 800px;
+    height: 500px;
+    border-style: solid;
+    border-radius: 1px black;
+}
+
+/* #body-verProduto{
+    width: 100vw;
+    height: 100vh;
+} */
+
+
+body{
+    width: 100vw;
+    max-width: 100%;
+    height: 100vh;
+    max-height: 100%;
+}
+
+.index-campos{
+    margin-bottom: 10px!important;
+}
+
+
+
