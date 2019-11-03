@@ -60,21 +60,22 @@ if (isset($_GET['id'])) {
     <title>Ver Produto</title>
 </head>
 
-<body id="body-verProduto" class="container d-flex justify-content-center align-items-center">
+<body id="body-verProduto" class="container d-flex justify-content-center align-items-center flex-column">
     <?php include_once("variaveis.php") ?>
-    <a href="index.php">VOLTAR</a>
+    <div>
+        <h1 class="h1">
+        <a href="index.php">VOLTAR</a>
+        </h1>    
+    </div>
     <section>
         <div class="container d-flex justify-content-between align-items-center" id="section-verProduto">
-
-
-
             <?php if (isset($dadosProduto) && $dadosProduto != []) { ?>
                 <?php foreach ($dadosProduto as $produto) {
                         if ($_GET['id'] == $produto['id']) { ?>
 
                         <div class="row">
-                            <div class="col-4">
-                                <img class="img-fluid" src="<?php echo $produto['foto'] ?>" alt="">
+                            <div class="col-4 d-flex justify-content-center align-items-center">
+                                <img class="img-fluid rounded mx-auto d-block" src="<?php echo $produto['foto'] ?>" alt="">
                             </div>
 
                             <div class="col-8" id="img-verProduto">

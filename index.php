@@ -5,7 +5,7 @@ $nomeArquivo = "produto.json";
 function cadastrarProduto($nomeProduto, $categoriaProduto, $precoProduto, $fotoProduto, $descProduto, $quantidadeProduto)
 {
     global $nomeArquivo;
-
+    $idProduto = 0;
 
     if (file_exists($nomeArquivo)) {
 
@@ -16,10 +16,10 @@ function cadastrarProduto($nomeProduto, $categoriaProduto, $precoProduto, $fotoP
         //transformando JSON em ARRAY para poder inserir produtos
         $produtos = json_decode($arquivo, true);
 
-        $idProduto = count($produtos) + 1;
+        
         //adicionando um novo produto dentro do ARRAY que estava dentro do arquivo
         $produtos[] = ["id" => $idProduto, "nome" => $nomeProduto, "categoria" => $categoriaProduto, "preco" => $precoProduto, "foto" => $fotoProduto, "descricao" => $descProduto, "quantidade" => $quantidadeProduto];
-
+        $idProduto = count($produtos) + 1;
         //salvando JSON dentro de um arquivo
         $json = json_encode($produtos);
 
@@ -28,7 +28,7 @@ function cadastrarProduto($nomeProduto, $categoriaProduto, $precoProduto, $fotoP
 
         //validando se ocorreu algum erro na hora de colocar o conteúdo dentro do arquivo JSON
         if ($deuCerto) {
-            return "Dados salvos com sucesso!";
+            return "Dados salvos com sucesso!!";
         } else {
             return "Ops, encontramos um problema! Entre em contato com o administrador do sistema!";
         }
@@ -83,67 +83,92 @@ if ($_POST) {
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/style.css">
 
     <title>Cadastro</title>
 </head>
 
-<body>
+<body class="container-fluid d-flex justify-content-between align-items-center">
     <?php include_once("variaveis.php"); ?>
     <main class="container d-flex justify-content-center align-items-center">
-
-        <div class="row">
+        <div class="row w-100">
             <div class="col-6">
-                <h1>Cadastro de Produtos</h1>
-                <form action="index.php" method="post" enctype="multipart/form-data">
-                    <div class="form-group">
-                        <div class="index-campos">
-                            <input class="form-control" type="text" name="nomeProduto" id="" placeholder="Nome do produto">
-                        </div>
-                        <div class="index-campos">
-                            <input class="form-control" type="text" name="descProduto" id="" placeholder="Desrição do produto">
-                        </div>
-                        <div>
-                            <div class="index-campos">
-                                <input class="form-control" type="text" name="categoriaProduto" id="" placeholder="Categoria do produto">
-                            </div>
-                            <div class="index-campos">
-                                <input class="form-control" type="text" name="quantidadeProduto" id="" placeholder="Quantidade do produto">
-                            </div >
-                            <div class="index-campos">
-                                <input class="form-control" type="number" name="precoProduto" id="" placeholder="Preço do produto">
-                            </div>
-                            <div class="index-campos">
-                                <input class="form-control" type="file" name="fotoProduto" id="" placeholder="Foto do produto">
-                            </div>
-                            <button class="btn btn-success" type="submit">Cadastrar Produto</button>
-                        </div>
-                </form>
-            </div>
-        </div>
-        <div>
-            <section>
-                <h1>Todos os produtos</h1>
-                <table class="table">
-                    <tr>
-                        <th>Nome</th>
-                        <th>Categoria</th>
-                        <th>Preço</th>
-                    </tr>
-                    <?php foreach ($produtos as $produto) { ?>
+                <section>
+                    <h1>Todos os produtos</h1>
+                    <table class="table">
                         <tr>
-                            <td>
-                                <a href="verProduto.php?id= <?php echo $produto['id']; ?>">
-                                    <?php echo $produto["nome"]; ?>
-                                </a>
-                            </td>
-                            <td><?php echo $produto["categoria"]; ?></td>
-                            <td><?php echo $produto["preco"]; ?></td>
+                            <th>Nome</th>
+                            <th>Categoria</th>
+                            <th>Preço</th>
                         </tr>
-                    <?php } ?>
-                </table>
+                        <?php if ($produtos != []) {
+                            foreach ($produtos as $produto) { ?>
+                                <tr>
+                                    <td>
+                                        <a href="verProduto.php?id= <?php echo $produto['id']; ?>">
+                                            <?php echo $produto["nome"]; ?>
+                                        </a>
+                                    </td>
+                                    <td><?php echo $produto["categoria"]; ?></td>
+                                    <td><?php echo "R$".$produto["preco"]; ?></td>
+                                </tr>
+                            <?php } ?>
+                        <?php } else { ?>
+                            <span>
+                                <h5 id="span-h1">Atenção! Não existem FRUTAS cadastradas.</h5>
+                            </span>
+                        <?php } ?>
+                    </table>
+            </div>
+            </section>
+
+
+            <div id="section-dois" class="col-6 rounded">
+                <section  class="d-flex justify-content-center align-items-center">
+                    <div class="row container-fluid justify-content-center">
+                        <div>
+                            <h1 class="border-bottom">Cadastro de Produtos</h1>
+                            <form action="index.php" method="post" enctype="multipart/form-data" id="index-form">
+                                <div class="form-group">
+                                    <div class="index-campos">
+                                        <h5>Nome</h5>
+                                        <input class="form-control" type="text" required="required" name="nomeProduto" placeholder="">
+                                    </div>
+                                    <div class="index-campos">
+                                        <h5>Descrição</h5>
+                                        <textarea class="form-control" required="required" name="descProduto"></textarea>
+                                    </div>
+                                    <div>
+                                        <div class="index-campos">
+                                            <h5>Categoria</h5>
+                                            <select class="form-control index-campos" required="required" name="categoriaProduto">
+                                                <option value="" hidden>Selecione uma categoria</option>
+                                                <option value="Frutas Vermelhas">Frutas Vermelhas</option>
+                                                <option value="Frutas Verdes">Frutas Verdes</option>
+                                                <option value="Frutas Amarelas">Frutas Amarelas</option>
+                                            </select>
+                                        </div>
+                                        <div class="index-campos">
+                                            <h5>Quantidade</h5>
+                                            <input class="form-control" type="text" required="required" name="quantidadeProduto" placeholder="">
+                                        </div>
+                                        <div class="index-campos">
+                                            <h5>Preço</h5>
+                                            <input class="form-control" type="number" required="required" name="precoProduto" placeholder="">
+                                        </div>
+                                        <div class="index-campos">
+                                            <h5>Foto do produto</h5>
+                                            <input class="form-control" type="file" required="required" name="fotoProduto" placeholder="">
+                                        </div>
+                                        <button class="btn btn-success" type="submit">Enviar</button>                                        
+                                    </div>
+                            </form>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
         </div>
-        </section>
     </main>
 </body>
 
